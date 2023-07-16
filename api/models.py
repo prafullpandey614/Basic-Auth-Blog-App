@@ -14,3 +14,5 @@ class Blog(models.Model):
     likes_count = models.IntegerField(default=0)
     def __str__(self) -> str:
         return f"{self.author} "
+    
+    # added in main
