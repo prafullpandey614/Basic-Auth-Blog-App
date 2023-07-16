@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import status , generics,views, response
@@ -51,7 +52,7 @@ class LogoutAPIView(views.APIView):
         return response.Response({"Message":"Logged Out Successfully"})
     
 class HomePage(LoginRequiredMixin, views.APIView):
-    login_url = 'login'
+    login_url = '/api/login'
     permission_denied_message = "Please login."
 
     def get(self, request):
@@ -68,9 +69,32 @@ class HomePage(LoginRequiredMixin, views.APIView):
 class AddBlogAPIView(LoginRequiredMixin,generics.CreateAPIView):
     model = Blog
     serializer_class = BlogSerializer
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 class UpdateBlogAPIView(LoginRequiredMixin,generics.UpdateAPIView):
-    queryset = Blog
+    queryset = Blog.objects.all()
     serializer_class = BlogSerializer
     lookup_field = 'id'
+    
+class DeleteBlogAPIView(LoginRequiredMixin,generics.DestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    lookup_field = 'id'
+
+class BlogsListAPIView(LoginRequiredMixin,generics.ListAPIView):
+    serializer_class = BlogSerializer
+    def get_queryset(self):
+        queryset = Blog.objects.filter(author=self.request.user.id)
+        print(self.request.user.id)
+        return queryset
+
+class MyProfileAPIView(LoginRequiredMixin,views.APIView):
+    def get(self,request):
+        res = {
+            "username" : request.user.username
+        }
+        return response.Response(res)
     
