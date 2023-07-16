@@ -100,4 +100,4 @@ class MyProfileAPIView(LoginRequiredMixin,views.APIView):
     
 #added by Gaurav
 #second comment by gaurav
-    
+#front 432 changes
