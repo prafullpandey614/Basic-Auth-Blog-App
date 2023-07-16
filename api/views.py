@@ -98,3 +98,6 @@ class MyProfileAPIView(LoginRequiredMixin,views.APIView):
         }
         return response.Response(res)
     
+#added by Gaurav
+#second comment by gaurav
+    
